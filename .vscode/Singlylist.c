@@ -66,10 +66,233 @@ void display_withHead(link *p){
     printf("\n");
 }
 
+//p为原链表，elem表示新数据元素，add表示新元素要插入的下标
+link* insertElem_withHead(link *p, int elem, int add){
+    if (add < 0)
+    {
+        printf("删除位置异常");
+        return p;
+    }
+    link *temp = NULL; //声明临时节点temp
+    temp = p; //指向无内容的头指针
+    for (int i = 0; i <= add - 1; i++) //找插入位置的前接元素
+    {
+        if (temp->next)
+        {
+            temp = temp->next;
+        }
+    }
+    link *a = (link*)malloc(sizeof(link)); //声明一个新节点
+    a->elem = elem;
+    a->next = temp->next; //初始化新节点,并将其连接到链表上
+    temp->next = a; //前方对接
+    return p;
+}
+
+link* insertElem(link *p, int elem, int add){
+    if (add < 0)
+    {
+        printf("删除位置异常");
+        return p;
+    }
+    link *temp = NULL;
+    temp = p;
+    link *a = (link*)malloc(sizeof(link));
+    a->elem = elem;
+    if (add == 0)
+    {
+        a->next = p;
+        return a;
+    }else
+    {
+        for (int i = 1; i <= add - 1; i++)
+        {
+            if (temp->next)
+            {
+                temp = temp->next;
+            }
+            
+        }
+        a->next = temp->next;
+        temp->next=a;
+        return p;
+    }   
+}
+
+//链表删除元素 del为下标
+link* delElem(link *p, int del){
+    if (del < 0)
+    {
+        printf("删除位置异常");
+        return p;
+    }
+    link *temp = NULL;
+    if (del == 0)
+    {
+        return p->next;
+    }else
+    {
+        temp=p;
+        for (int i = 1; i <= del-1; i++)
+        {
+            if (temp->next)
+            {
+                temp=temp->next;
+            }
+        }
+        link *haha = temp->next;
+        if (temp->next)
+        {
+            temp->next = temp->next->next;
+            free(haha);
+        }
+        
+        return p;
+    }
+}
+
+link* delElem_withHead(link *p, int del){
+    if (del < 0)
+    {
+        printf("删除位置异常");
+        return p;
+    }
+    link *temp = NULL;
+    temp = p;
+    for (int i = 0; i <= del - 1; i++)
+    {
+        if (temp->next)
+        {
+            temp=temp->next;
+        }
+
+    }
+    link *haha = temp->next;
+    if (temp->next)
+    {
+        temp->next = temp->next->next;
+        free(haha);
+    }
+    return p;
+}
+
+// 链表查找元素, elem为被查找元素, 返回下标
+int selectElem(link *p, int elem){
+    link *temp = NULL;
+    temp = p;
+    int i = 0;
+    while (temp)
+    {
+        if (temp->elem == elem)
+        {
+            return i;
+        }
+        temp = temp->next;
+        i++;
+    }
+    return -1;
+}
+
+int selectElem_withHead(link *p, int elem){
+    link *temp = NULL;
+    temp = p->next;
+    int i = 0;
+    while (temp)
+    {
+        if (temp->elem == elem)
+        {
+            return i;
+        }
+        temp = temp->next;
+        i++;
+    }
+    return -1;
+}
+
+//链表更新元素 add表示更新的位置, newElem表示更新的值
+link* amendElem_withHead(link *p, int add, int newElem){
+    if (add < 0)
+    {
+        printf("下标异常");
+        return p;
+    }
+    link *temp = NULL;
+    temp = p;
+    for (int i = 0; i <= add; i++)
+    {
+        temp = temp->next;
+    }
+    if (temp)
+    {
+        temp->elem = newElem;
+    }else
+    {
+        printf("越界,没有修改");
+    }
+    return p;
+}
+
+link* amendElem(link *p, int add, int newElem){
+    if (add < 0)
+    {
+        printf("下标异常");
+        return p;
+    }else if (add == 0)
+    {
+        p->elem = newElem;
+        return p;
+    }else{
+        link *temp = NULL;
+        temp = p;
+        for (int i = 1; i <= add; i++)
+        {
+            temp = temp->next;
+        }
+        if (temp)
+        {
+            temp->elem = newElem;
+        }else
+        {
+            printf("越界,没有修改");
+        }
+        return p;
+    }
+}
+
+// 初始化并显示链表元素
+// int main() {
+//     //初始化链表（1，2，3，4）
+//     printf("初始化链表为：\n");
+//     link *p=initLink();
+//     display(p);
+//     return 0;
+// }
+
+
 int main() {
     //初始化链表（1，2，3，4）
     printf("初始化链表为：\n");
     link *p=initLink();
     display(p);
+  
+    printf("在第4的位置插入元素5：\n");
+    p=insertElem(p, 5, 4);
+    display(p);
+  
+    printf("删除第三位:\n");
+    p=delElem(p, 3);
+    display(p);
+  
+    printf("查找元素2的位置为：\n");
+    int address=selectElem(p, 2);
+    if (address==-1) {
+        printf("没有该元素");
+    }else{
+        printf("元素2的位置为：%d\n",address);
+    }
+    printf("更改第3的位置上的数据为7:\n");
+    p=amendElem(p, 3, 7);
+    display(p);
+  
     return 0;
 }
